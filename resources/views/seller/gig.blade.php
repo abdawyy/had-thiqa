@@ -37,7 +37,7 @@
             <div class="mt-3 space-y-2">
                 @forelse ($orders as $order)
                     <a href="{{ route('seller.orders.show', $order) }}" class="block rounded-2xl bg-white p-4 text-right">
-                        <p class="font-extrabold">#{{ $order->number }} · {{ number_format($order->total) }} ج</p>
+                        <p class="font-extrabold">#{{ $order->number }} · ربحك {{ number_format(\App\Support\Split::amount($order->distributable(), 'author')) }} ج</p>
                         <p class="mt-1 text-[12px] text-[#8A7280]">{{ $order->client_name }} · {{ $order->statusLabel() }}</p>
                     </a>
                 @empty

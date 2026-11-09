@@ -10,7 +10,7 @@
     </header>
     <div class="mx-4 mt-4 grid items-start gap-4 sm:mx-6 lg:mx-8 lg:grid-cols-2">
     <section class="rounded-[24px] bg-white p-4 text-right md:p-6">
-        <p class="text-[13px] leading-7 text-[#6B4F60]">رصيد الحساب {{ number_format($worker->balance) }} جنيه · جاهز للسحب {{ number_format($worker->withdrawable) }} جنيه · معلّق {{ number_format($worker->pending) }} جنيه</p>
+        <p class="text-[13px] leading-7 text-[#6B4F60]">نصيبك الجاهز {{ number_format($available) }} جنيه · معلّق لحد تقييم العميل {{ number_format($pending) }} جنيه. العميل هو اللي دفع، والمنصة بتحوّل لك {{ \App\Support\Split::percent('executor') }}%.</p>
         <div class="mt-3 grid grid-cols-3 gap-2 text-center">
             @foreach (['مهام منجزة' => $worker->jobs_done, 'بدون تعديل' => $worker->jobs_clean, 'التقييم' => $worker->rating] as $label => $value)
                 <div class="rounded-2xl bg-[#F6F0E8] py-3">

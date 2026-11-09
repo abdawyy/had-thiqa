@@ -21,7 +21,7 @@
         <div class="mt-4 grid grid-cols-3 gap-2">
             <div class="rounded-2xl bg-[#DCEFD6] px-2 py-3 text-center">
                 <p class="text-[10px] text-[#4C6A44]">جاهز للسحب</p>
-                <p class="num text-[18px] font-extrabold">{{ number_format($worker->withdrawable) }}</p>
+                <p class="num text-[18px] font-extrabold">{{ number_format($money['available']) }}</p>
                 <p class="text-[10px] text-[#4C6A44]">جنيه</p>
             </div>
             <div class="rounded-2xl bg-[#E9E4F5] px-2 py-3 text-center">
@@ -30,8 +30,8 @@
                 <p class="text-[10px] text-[#5B4A78]">{{ $worker->level_name }}</p>
             </div>
             <div class="rounded-2xl bg-[#F6EDE4] px-2 py-3 text-center">
-                <p class="text-[10px] text-[#8A7280]">رصيد الحساب</p>
-                <p class="num text-[18px] font-extrabold">{{ number_format($worker->balance) }}</p>
+                <p class="text-[10px] text-[#8A7280]">معلّق لحد التقييم</p>
+                <p class="num text-[18px] font-extrabold">{{ number_format($money['pending']) }}</p>
                 <p class="text-[10px] text-[#A9939F]">جنيه</p>
             </div>
         </div>

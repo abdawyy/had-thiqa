@@ -120,6 +120,7 @@ class DatabaseSeeder extends Seeder
         $services = [];
         foreach ($catalog as [$slug, $name, $sample, $xp, $price, $duration, $min]) {
             $services[$slug] = Service::create([
+                'seller_id' => $seller->id,
                 'slug' => $slug,
                 'name' => $name,
                 'sample' => $sample,

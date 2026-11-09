@@ -24,7 +24,7 @@
         <article class="rounded-2xl bg-[#F8E9B6] p-3">
             <p class="text-[11px]">نصيب المنصة</p>
             <p class="num text-[20px] font-extrabold">{{ number_format($platform) }}</p>
-            <p class="text-[11px]">15% من الأساس. المتابعة {{ number_format($trackingIncome) }} ج خارج النسبة</p>
+            <p class="text-[11px]">{{ \App\Support\Split::percent('platform') }}% من الأساس. المتابعة {{ number_format($trackingIncome) }} ج خارج النسبة</p>
         </article>
         <article class="rounded-2xl bg-white p-3">
             <p class="text-[11px]">متوسط التقييم</p>

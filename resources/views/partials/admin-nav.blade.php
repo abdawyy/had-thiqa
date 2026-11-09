@@ -3,7 +3,7 @@
         <a href="{{ route('admin.home') }}" class="font-extrabold">إدارة حد ثقة</a>
         <nav class="flex items-center gap-1 text-[13px] font-extrabold">
             <a href="{{ route('admin.home') }}" class="rounded-full px-3 py-2 {{ request()->routeIs('admin.home') ? 'bg-[#5C3A4A] text-white' : 'text-[#6B5560]' }}">اللوحة</a>
-            <a href="{{ route('admin.analytics') }}" class="rounded-full px-3 py-2 {{ request()->routeIs('admin.analytics') ? 'bg-[#5C3A4A] text-white' : 'text-[#6B5560]' }}">تحليل</a>
+            <a href="{{ route('admin.analytics') }}" class="rounded-full px-3 py-2 {{ request()->routeIs('admin.analytics') ? 'bg-[#5C3A4A] text-white' : 'text-[#6B5560]' }}">الأطراف</a>
             <form method="POST" action="{{ route('logout') }}">@csrf<button class="rounded-full px-3 py-2 text-[#7A3040]">خروج</button></form>
         </nav>
     </div>

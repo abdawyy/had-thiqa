@@ -18,6 +18,10 @@ class WorkerController extends Controller
             'worker' => $worker,
             'progress' => $worker->progress(),
             'offers' => Offer::query()->with('service')->where('active', true)->orderBy('id')->get(),
+            'money' => [
+                'available' => Wallet::available($worker),
+                'pending' => Wallet::pending($worker),
+            ],
         ]);
     }
 
@@ -97,6 +101,7 @@ class WorkerController extends Controller
             'worker' => $worker,
             'last' => $last,
             'available' => Wallet::available($worker),
+            'pending' => Wallet::pending($worker),
         ]);
     }
 

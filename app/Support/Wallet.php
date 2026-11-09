@@ -9,6 +9,31 @@ use Illuminate\Support\Collection;
 
 class Wallet
 {
+    public static function sync(): void
+    {
+        Order::query()
+            ->with('service')
+            ->where('payment_status', 'released')
+            ->each(fn (Order $order) => static::release($order));
+    }
+
+    public static function pending(User $user): int
+    {
+        $orders = Order::query()->with('service')->where('payment_status', 'held');
+
+        if ($user->role === 'seller') {
+            $orders->whereHas('service', fn ($query) => $query->where('seller_id', $user->id));
+
+            return (int) $orders->get()->sum(fn (Order $order) => Split::amount($order->distributable(), 'author'));
+        }
+
+        if ($user->role !== 'worker') {
+            return 0;
+        }
+
+        return (int) $orders->where('worker_id', $user->id)->get()->sum(fn (Order $order) => $order->workerShare());
+    }
+
     public static function collect(Order $order): void
     {
         if ($order->payment_status !== 'held') {
@@ -51,6 +76,8 @@ class Wallet
 
     public static function earned(User $user): int
     {
+        static::sync();
+
         return (int) static::sharesFor($user)->sum('amount');
     }
 

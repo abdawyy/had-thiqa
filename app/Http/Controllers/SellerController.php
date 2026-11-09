@@ -38,7 +38,8 @@ class SellerController extends Controller
             default => $orders,
         };
 
-        $paid = $orders->whereIn('payment_status', ['held', 'released']);
+        $released = $orders->where('payment_status', 'released');
+        $held = $orders->where('payment_status', 'held');
 
         return view('seller.home', [
             'seller' => $seller,
@@ -51,8 +52,9 @@ class SellerController extends Controller
                 'live' => $gigs->where('available', true)->count(),
                 'open' => $orders->where('pipeline_stage', '<', 5)->where('payment_status', '!=', 'unpaid')->count(),
                 'done' => $orders->where('pipeline_stage', 5)->count(),
-                'sales' => $paid->sum('total'),
-                'share' => $paid->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
+                'sales' => $released->sum('total') + $held->sum('total'),
+                'share' => Wallet::available($seller),
+                'pending' => (int) $held->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
             ],
         ]);
     }
@@ -143,7 +145,8 @@ class SellerController extends Controller
             'done' => $done->count(),
             'open' => $orders->where('pipeline_stage', '<', 5)->count(),
             'sales' => $orders->whereIn('payment_status', ['held', 'released'])->sum('total'),
-            'share' => $done->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
+            'share' => Wallet::available($seller),
+            'pending' => Wallet::pending($seller),
             'available' => Wallet::available($seller),
         ]);
     }

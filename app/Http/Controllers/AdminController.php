@@ -9,6 +9,8 @@ use App\Models\Service;
 use App\Models\Skill;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Support\Split;
+use App\Support\Wallet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -113,25 +115,72 @@ class AdminController extends Controller
 
     public function analytics()
     {
+        Wallet::sync();
+
         $orders = Order::query()->with('service.seller', 'worker')->get();
         $paid = $orders->whereIn('payment_status', ['held', 'released']);
-        $done = $orders->where('pipeline_stage', 5);
-        $base = $paid->sum(fn (Order $order) => $order->distributable());
+        $released = $orders->where('payment_status', 'released');
+        $held = $orders->where('payment_status', 'held');
+
+        $gigs = Service::query()->with('seller')->orderBy('name')->get()->map(function (Service $service) use ($orders) {
+            $rows = $orders->where('service_id', $service->id);
+            $done = $rows->where('payment_status', 'released');
+            $waiting = $rows->where('payment_status', 'held');
+
+            return [
+                'name' => $service->name,
+                'seller' => $service->seller?->name ?? 'من غير بائعة',
+                'price' => $service->price,
+                'orders' => $rows->count(),
+                'collected' => $rows->whereIn('payment_status', ['held', 'released'])->sum('total'),
+                'worker' => $done->sum(fn (Order $order) => $order->workerShare()),
+                'seller_gain' => $done->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
+                'platform' => $done->sum(fn (Order $order) => Split::amount($order->distributable(), 'platform')),
+                'pending' => $waiting->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
+            ];
+        });
+
+        $workers = User::query()->where('role', 'worker')->orderBy('name')->get()->map(function (User $worker) use ($orders) {
+            $rows = $orders->where('worker_id', $worker->id);
+            $done = $rows->where('payment_status', 'released');
+
+            return [
+                'name' => $worker->name,
+                'level' => $worker->level_name,
+                'jobs' => $done->count(),
+                'open' => $rows->where('payment_status', 'held')->count(),
+                'earned' => Wallet::available($worker) + Wallet::paidOut($worker),
+                'available' => Wallet::available($worker),
+                'pending' => Wallet::pending($worker),
+            ];
+        });
+
+        $sellers = User::query()->where('role', 'seller')->withCount('gigs')->orderBy('name')->get()->map(function (User $seller) use ($orders) {
+            $rows = $orders->filter(fn (Order $order) => $order->service?->seller_id === $seller->id);
+            $done = $rows->where('payment_status', 'released');
+
+            return [
+                'name' => $seller->name,
+                'gigs' => $seller->gigs_count,
+                'orders' => $rows->count(),
+                'gain' => $done->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
+                'available' => Wallet::available($seller),
+                'pending' => Wallet::pending($seller),
+            ];
+        });
 
         return view('admin.analytics', [
             'orders' => $orders->count(),
-            'open' => $orders->where('pipeline_stage', '<', 5)->where('payment_status', 'held')->count(),
-            'done' => $done->count(),
+            'open' => $held->count(),
+            'done' => $released->count(),
             'collected' => $paid->sum('total'),
-            'platform' => (int) round($base * \App\Support\Split::percent('platform') / 100),
-            'workers' => User::query()->where('role', 'worker')->count(),
-            'sellers' => User::query()->where('role', 'seller')->count(),
+            'platform' => $released->sum(fn (Order $order) => Split::amount($order->distributable(), 'platform')),
+            'workerShare' => $released->sum(fn (Order $order) => $order->workerShare()),
+            'sellerShare' => $released->sum(fn (Order $order) => Split::amount($order->distributable(), 'author')),
             'payouts' => LedgerEntry::query()->where('type', 'payout')->sum('amount'),
-            'top' => $orders->groupBy('service_id')->map(fn ($group) => [
-                'name' => $group->first()->service?->name ?? $group->first()->title,
-                'count' => $group->count(),
-                'total' => $group->sum('total'),
-            ])->sortByDesc('total')->take(5)->values(),
+            'gigs' => $gigs,
+            'workers' => $workers,
+            'sellers' => $sellers,
         ]);
     }
 

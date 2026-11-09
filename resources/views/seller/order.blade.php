@@ -19,8 +19,8 @@
             <p class="mt-3 text-[12px] text-[#8A7280]">العميل: {{ $order->client_name }}</p>
             <p class="text-[12px] text-[#8A7280]">المنفذة: {{ $order->worker?->name ?? 'لسه ما اتحددتش' }}</p>
             <p class="text-[12px] text-[#8A7280]">التسليم: {{ $order->due_label }} @if ($order->due_at) · {{ $order->due_at->format('Y-m-d H:i') }} @endif</p>
-            <p class="mt-3 text-[14px] font-extrabold">قيمة الطلب {{ number_format($order->total) }} ج</p>
-            <p class="text-[13px] text-[#3E5C45]">نصيبك {{ \App\Support\Split::percent('author') }}% = {{ number_format(\App\Support\Split::amount($order->distributable(), 'author')) }} ج بعد استلام العميل. المنصة تخصم {{ \App\Support\Split::percent('platform') }}%.</p>
+            <p class="mt-3 text-[14px] font-extrabold">العميل دفع {{ number_format($order->total) }} ج للمنصة</p>
+            <p class="text-[13px] text-[#3E5C45]">ربحك {{ \App\Support\Split::percent('author') }}% = {{ number_format(\App\Support\Split::amount($order->distributable(), 'author')) }} ج{{ $order->payment_status === 'released' ? ' واتضاف لحسابك.' : ' لسه معلّق لحد التقييم. المبلغ مش اتخصم منك.' }}</p>
             @if ($order->rating)
                 <p class="mt-3 text-[13px]">تقييم العميل {{ $order->rating->average() }} من 5. {{ $order->rating->note }}</p>
             @endif

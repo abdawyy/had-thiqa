@@ -22,7 +22,10 @@ class MarketplaceTest extends TestCase
         $this->actingAs($this->sara());
 
         $this->get('/')->assertOk()->assertSee('اختر مسارك', false);
-        $this->get('/worker')->assertOk()->assertSee('أهلاً سارة', false)->assertSee('3,480', false);
+        $this->get('/worker')->assertOk()->assertSee('أهلاً سارة', false)->assertSee('405', false);
+        $this->get(route('worker.analytics'))->assertOk()->assertSee('405', false);
+        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
+        $this->get(route('seller.analytics'))->assertOk()->assertSee('135', false)->assertSee('ربحك', false);
     }
 
     public function test_worker_can_claim_a_task_and_finish_the_first_step(): void
@@ -177,7 +180,13 @@ class MarketplaceTest extends TestCase
     public function test_seller_cannot_open_someone_elses_gig_or_order(): void
     {
         $this->seed();
-        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
+        $other = User::query()->create([
+            'name' => 'بائعة تانية',
+            'email' => 'other-seller@hadthiqa.test',
+            'password' => 'password',
+            'role' => 'seller',
+        ]);
+        $this->actingAs($other);
 
         $paint = Service::query()->where('slug', 'paint')->firstOrFail();
         $foreign = Order::query()->where('number', 1038)->firstOrFail();

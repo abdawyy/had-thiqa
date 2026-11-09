@@ -30,16 +30,16 @@
             <p class="num text-[22px] font-extrabold">{{ $stats['done'] }}</p>
         </article>
         <article class="rounded-2xl bg-[#5C3A4A] p-3 text-right text-[#FBF6F1]">
-            <p class="text-[11px] text-[#F0D7E4]">نصيبك {{ \App\Support\Split::percent('author') }}%</p>
+            <p class="text-[11px] text-[#F0D7E4]">ربحك الجاهز {{ \App\Support\Split::percent('author') }}%</p>
             <p class="num text-[22px] font-extrabold">{{ number_format($stats['share']) }}</p>
-            <p class="text-[11px] text-[#E8DCE2]">من مبيعات {{ number_format($stats['sales']) }} ج</p>
+            <p class="text-[11px] text-[#E8DCE2]">معلّق {{ number_format($stats['pending']) }} · العميل يدفع مش أنتِ</p>
         </article>
     </section>
 
     <div class="mx-4 mt-4 grid items-start gap-4 sm:mx-6 lg:mx-8 lg:grid-cols-2">
         <section class="rounded-[24px] bg-white p-4 md:p-6">
             <h2 class="text-right text-[18px] font-extrabold">انشري خدمة</h2>
-            <p class="mt-1 text-[12px] leading-6 text-[#8A7280]">السعر اللي بتحدديه هو سعر العميل. المنصة تخصم {{ \App\Support\Split::percent('platform') }}%، ونصيبك {{ \App\Support\Split::percent('author') }}% بعد الاستلام.</p>
+            <p class="mt-1 text-[12px] leading-6 text-[#8A7280]">السعر ده اللي العميل بيدفعه للمنصة. أنتِ مش بتدفعي حاجة. بعد التقييم بتكسبي {{ \App\Support\Split::percent('author') }}%، والمنصة تخصم {{ \App\Support\Split::percent('platform') }}%.</p>
             <form method="POST" action="{{ route('seller.gigs.store') }}" class="mt-3 space-y-2">
                 @csrf
                 <input name="name" value="{{ old('name') }}" required placeholder="اسم الخدمة" class="h-11 w-full rounded-2xl border border-black/10 px-3">
@@ -103,7 +103,8 @@
             @forelse ($orders as $order)
                 <a href="{{ route('seller.orders.show', $order) }}" class="rounded-2xl bg-white p-4 text-right">
                     <p class="text-[14px] font-extrabold">#{{ $order->number }} · {{ $order->title }}</p>
-                    <p class="mt-1 text-[12px] text-[#8A7280]">{{ $order->client_name }} · المنفذة {{ $order->worker?->name ?? 'لسه ما اتحددتش' }} · {{ number_format($order->total) }} ج</p>
+                    <p class="mt-1 text-[12px] text-[#8A7280]">{{ $order->client_name }} · المنفذة {{ $order->worker?->name ?? 'لسه ما اتحددتش' }}</p>
+                    <p class="mt-1 text-[12px] font-extrabold text-[#3E5C45]">ربحك {{ number_format(\App\Support\Split::amount($order->distributable(), 'author')) }} ج{{ $order->payment_status === 'released' ? ' · اتضاف' : ' · لسه معلّق' }}</p>
                     <p class="mt-1 text-[12px] font-bold text-[#5C3A4A]">{{ $order->statusLabel() }}@if ($order->rating) · تقييم {{ $order->rating->average() }}@endif</p>
                 </a>
             @empty

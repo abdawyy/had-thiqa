@@ -6,7 +6,7 @@
 @section('content')
     <header class="px-4 pt-6 text-right sm:px-6 lg:px-8">
         <h1 class="text-[28px] font-extrabold">تحليل البيع</h1>
-        <p class="text-[13px] text-[#8A7280]">{{ $seller->name }} · نصيبك {{ \App\Support\Split::percent('author') }}% والمنصة {{ \App\Support\Split::percent('platform') }}%</p>
+        <p class="text-[13px] text-[#8A7280]">{{ $seller->name }} · بتكسبي {{ \App\Support\Split::percent('author') }}% · المنصة {{ \App\Support\Split::percent('platform') }}% · معلّق {{ number_format($pending) }} ج</p>
     </header>
     <section class="mx-4 mt-4 grid grid-cols-2 gap-2 sm:mx-6 sm:grid-cols-4 lg:mx-8">
         @foreach (['الطلبات' => $orders, 'مكتمل' => $done, 'شغال' => $open, 'الخدمات' => $gigs->count()] as $label => $value)
@@ -18,9 +18,9 @@
     </section>
     <section class="mx-4 mt-4 grid gap-4 sm:mx-6 lg:mx-8 lg:grid-cols-2">
         <article class="rounded-[24px] bg-[#5C3A4A] p-5 text-right text-[#FBF6F1]">
-            <p class="text-[12px] text-[#F0D7E4]">مبيعات محصّلة</p>
-            <p class="num mt-2 text-4xl font-extrabold">{{ number_format($sales) }} ج</p>
-            <p class="mt-2">نصيبك من المكتمل {{ number_format($share) }} ج</p>
+            <p class="text-[12px] text-[#F0D7E4]">ربحك من المكتمل</p>
+            <p class="num mt-2 text-4xl font-extrabold">{{ number_format($share) }} ج</p>
+            <p class="mt-2">قيمة طلبات العملاء {{ number_format($sales) }} ج، والعميل هو الدافع</p>
         </article>
         <article class="rounded-[24px] bg-white p-4">
             <h2 class="text-right text-[16px] font-extrabold">الخدمات حسب الطلب</h2>
