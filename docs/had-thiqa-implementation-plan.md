@@ -4,7 +4,9 @@ Read this file before changing code. The business story for the supervisor is in
 
 Do not redesign the product. Keep the two paths, the Arabic copy, the escrow story, and the split **45 / 30 / 15 / 10**. The platform keeps 10% as the party in the middle of every Instapay payment.
 
-The app lives in `c:\e_bussiness`. UI language is Arabic, right to left. Demo payments stay fake: Instapay is a simulated handle (`had.thiqa@instapay`). The platform collects the order, keeps 10%, and records the rest. Worker, seller, and admin each have a navbar, a footer, and an analytics page.
+The app lives in `c:\e_bussiness`. UI language is Arabic, right to left. Demo payments stay fake: Instapay is a simulated handle (`had.thiqa@instapay`). The client pays the platform. On release the worker gains 45%, the partner 30%, the seller gains 15%, and the platform keeps 10%. A seller never pays the gig price. Pending money stays pending until the client rates the order.
+
+The three panels share one top bar (`resources/views/partials/panel-nav.blade.php`): role, page links, and one logout. Worker home is «مهامك وأرباحك». Seller home is «خدماتك وربحك». Admin home is «لوحة الإدارة», and «الأطراف» lists gigs, workers, and sellers side by side. On the seeded released orders, Sara’s ready share is 405 EGP and Nada’s ready gain is 135 EGP. Demo logins, password `password`: `sara@hadthiqa.test`, `seller@hadthiqa.test`, `admin@hadthiqa.test`.
 
 ---
 
@@ -16,7 +18,7 @@ The app lives in `c:\e_bussiness`. UI language is Arabic, right to left. Demo pa
 4. Do not replace Blade + Tailwind CDN with a new frontend stack.
 5. Every money rule needs a feature test. Run `php artisan test` before finishing.
 6. After UI changes, open `http://127.0.0.1:8010` and walk the changed path. If the server is down: `php artisan serve --host=127.0.0.1 --port=8010`.
-7. Keep seeded demo numbers working: سارة, balance 3,480, level 3, paint share 90 EGP on a 200 EGP normal order.
+7. Keep the money rule working: سارة level 3, a normal 200 EGP paint job pays her 90 EGP, and her ready balance is the sum of released shares (405 EGP on the seed), not a separate zero.
 8. New Arabic strings should sound like the existing UI: short, spoken, not formal MSA.
 
 ---
