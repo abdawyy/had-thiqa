@@ -3,7 +3,7 @@
 @section('content')
     <header class="px-4 pt-6 text-right sm:px-6 lg:px-8">
         <p class="text-[12px] font-bold text-[#8A7280]">{{ $worker->name }}</p>
-        <h1 class="text-[28px] font-extrabold">مواهبي</h1>
+        <h1 class="text-[28px] font-extrabold">مهاراتي</h1>
         <p class="mt-2 text-[13px] leading-7 text-[#6B4F60]">أضيفي مهاراتك هنا. تظهر للعملاء في الترشيحات المهاراتُ المعتمدة فقط.</p>
     </header>
     <form method="POST" action="{{ route('worker.skills.store') }}" class="mx-4 mt-4 flex gap-2 sm:mx-6 lg:mx-8 lg:max-w-xl">

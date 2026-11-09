@@ -28,7 +28,7 @@ class SiteWalkTest extends TestCase
         $this->get('/worker')->assertRedirect(route('login', ['as' => 'worker']));
 
         $this->actingAs($this->user('sara@hadthiqa.test'));
-        foreach (['worker.home', 'worker.skills', 'worker.projects', 'worker.account', 'worker.analytics'] as $name) {
+        foreach (['worker.home', 'worker.skills', 'worker.projects', 'worker.account', 'worker.about', 'worker.analytics'] as $name) {
             $this->get(route($name))->assertOk();
         }
         $order = Order::query()->where('number', 1038)->firstOrFail();

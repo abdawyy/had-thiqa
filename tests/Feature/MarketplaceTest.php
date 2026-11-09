@@ -21,8 +21,8 @@ class MarketplaceTest extends TestCase
         $this->seed();
         $this->actingAs($this->sara());
 
-        $this->get('/')->assertOk()->assertSee('اختر مسارك', false)->assertDontSee('بائعة', false);
-        $this->get('/worker')->assertOk()->assertSee('أهلاً سارة', false)->assertSee('405', false);
+        $this->get('/')->assertOk()->assertSee('اختر مسارك', false)->assertSee('سجّلي معنا', false)->assertSee('أحتاج', false)->assertDontSee('بائعة', false);
+        $this->get('/worker')->assertOk()->assertSee('أهلاً سارة', false)->assertSee('3,480', false)->assertSee('1,950', false);
         $this->get(route('worker.analytics'))->assertOk()->assertSee('405', false);
     }
 

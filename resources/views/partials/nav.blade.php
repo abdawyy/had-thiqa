@@ -4,9 +4,9 @@
     'role' => 'المنفذة',
     'links' => [
         ['worker.home', 'الرئيسية', 'worker.home'],
-        ['worker.skills', 'مواهبي', 'worker.skills'],
+        ['worker.skills', 'مهاراتي', 'worker.skills'],
         ['worker.projects', 'المشاريع', 'worker.projects,worker.orders.*'],
+        ['worker.about', 'التعريفية', 'worker.about'],
         ['worker.account', 'حسابي', 'worker.account'],
-        ['worker.analytics', 'تحليل', 'worker.analytics'],
     ],
 ])

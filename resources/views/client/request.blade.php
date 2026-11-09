@@ -120,6 +120,13 @@
                 @endforeach
             </div>
             <p class="mt-2 text-center text-[11px] text-[#8A7280]">الكارت والمحفظة وإنستاباي تجريبيين في هذا النموذج.</p>
+            <a href="https://wa.me/201150056226" class="mt-3 flex items-center justify-between rounded-2xl bg-[#DCEFD6] px-4 py-3 text-right">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[#2F6B3C] text-[12px] font-extrabold text-white">و</span>
+                <span>
+                    <span class="block text-[13px] font-extrabold text-[#2F4529]">أو أرسل طلبك عبر واتساب</span>
+                    <span class="num mt-0.5 block text-[12px] text-[#4C6A44]">01150056226</span>
+                </span>
+            </a>
             <div class="mt-4 grid grid-cols-2 gap-2">
                 <button type="button" data-prev class="h-12 rounded-2xl bg-white font-extrabold">رجوع للتعديل</button>
                 <button class="primary-action h-12 rounded-2xl bg-[#5C3A4A] font-extrabold text-white">سجّل الطلب</button>

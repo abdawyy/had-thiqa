@@ -30,6 +30,7 @@ Route::prefix('worker')->name('worker.')->middleware(['auth', 'role:worker'])->g
     Route::post('/skills', [WorkerController::class, 'storeSkill'])->name('skills.store');
     Route::get('/projects', [WorkerController::class, 'projects'])->name('projects');
     Route::get('/account', [WorkerController::class, 'account'])->name('account');
+    Route::get('/about', [WorkerController::class, 'about'])->name('about');
     Route::get('/analytics', [WorkerController::class, 'analytics'])->name('analytics');
     Route::post('/offers/{offer}/claim', [ExecutionController::class, 'claim'])->name('claim');
     Route::get('/orders/{order}', [ExecutionController::class, 'show'])->name('orders.show');

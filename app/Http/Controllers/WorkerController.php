@@ -87,6 +87,11 @@ class WorkerController extends Controller
         ]);
     }
 
+    public function about()
+    {
+        return view('worker.about');
+    }
+
     public function account()
     {
         $worker = Demo::worker();

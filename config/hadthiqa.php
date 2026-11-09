@@ -3,7 +3,7 @@
 return [
     'tracking_fee' => 150,
     'instapay_handle' => 'had.thiqa@instapay',
-    'support_phone' => '01000000000',
+    'support_phone' => '01150056226',
     'partner_name' => 'ليلى',
 
     'discount_codes' => [

@@ -5,20 +5,23 @@
         <button type="button" onclick="document.getElementById('help').showModal()" class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-[12px] font-extrabold shadow-sm">
             طلب مساعدة
         </button>
-        <div class="text-right">
-            <p class="text-[12px] text-[#8A7280]">أهلاً {{ $worker->name }}</p>
-            <h1 class="text-[28px] font-extrabold leading-none">مهامك وأرباحك</h1>
+        <div class="flex items-center gap-2 text-right">
+            <div>
+                <p class="text-[16px] font-extrabold leading-none">لوحة المنفذة</p>
+                <p class="mt-1 text-[11px] text-[#8A7280]">متابعة المهام والأرباح</p>
+            </div>
+            <span class="grid h-12 w-12 place-items-center rounded-full bg-[#6B4F60] text-[18px] font-extrabold text-white">{{ $worker->letter }}</span>
         </div>
     </header>
 
     <div class="mt-4 grid items-start gap-4 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
     <section class="sheet p-4 md:p-6">
-        <h2 class="text-right text-[18px] font-extrabold">حالة اليوم</h2>
-        <p class="mt-1 text-right text-[12.5px] leading-6 text-[#8A7280]">الجاهز للسحب هو نصيبك بعد تقييم العميل. المعلّق لسه عند المنصة.</p>
+        <h1 class="text-right text-[28px] font-extrabold md:text-4xl">أهلاً {{ $worker->name }}</h1>
+        <p class="mt-1 text-right text-[12.5px] leading-6 text-[#8A7280]">هذه حالة حسابك اليوم: الرصيد والمستوى والمبلغ الجاهز للسحب.</p>
         <div class="mt-4 grid grid-cols-3 gap-2">
             <div class="rounded-2xl bg-[#DCEFD6] px-2 py-3 text-center">
                 <p class="text-[10px] text-[#4C6A44]">جاهز للسحب</p>
-                <p class="num text-[18px] font-extrabold">{{ number_format($money['available']) }}</p>
+                <p class="num text-[18px] font-extrabold">{{ number_format($worker->withdrawable) }}</p>
                 <p class="text-[10px] text-[#4C6A44]">جنيه</p>
             </div>
             <div class="rounded-2xl bg-[#E9E4F5] px-2 py-3 text-center">
@@ -27,8 +30,8 @@
                 <p class="text-[10px] text-[#5B4A78]">{{ $worker->level_name }}</p>
             </div>
             <div class="rounded-2xl bg-[#F6EDE4] px-2 py-3 text-center">
-                <p class="text-[10px] text-[#8A7280]">معلّق لحد التقييم</p>
-                <p class="num text-[18px] font-extrabold">{{ number_format($money['pending']) }}</p>
+                <p class="text-[10px] text-[#8A7280]">رصيد الحساب</p>
+                <p class="num text-[18px] font-extrabold">{{ number_format($worker->balance) }}</p>
                 <p class="text-[10px] text-[#A9939F]">جنيه</p>
             </div>
         </div>
@@ -55,15 +58,20 @@
             </span>
             <h2 class="text-[16px] font-extrabold">متاحة للعمل اليوم</h2>
         </div>
-        <form method="POST" action="{{ route('worker.availability') }}" class="mt-3">
-            @csrf
-            <input type="hidden" name="available" value="{{ $worker->is_available ? 0 : 1 }}">
-            <button class="primary-action h-14 w-full rounded-2xl text-[15px] font-extrabold {{ $worker->is_available ? 'bg-[#5C4454] text-white' : 'border border-[#E7E0D8] bg-white text-[#5C4454]' }}">
-                {{ $worker->is_available ? 'وقفي الإتاحة' : 'فعّلي الإتاحة' }}
-            </button>
-        </form>
+        <div class="mt-3 grid grid-cols-2 gap-2">
+            <form method="POST" action="{{ route('worker.availability') }}">
+                @csrf
+                <input type="hidden" name="available" value="1">
+                <button class="h-12 w-full rounded-2xl text-[14px] font-extrabold {{ $worker->is_available ? 'bg-[#5C4454] text-white' : 'bg-white text-[#5C4454]' }}">متاح</button>
+            </form>
+            <form method="POST" action="{{ route('worker.availability') }}">
+                @csrf
+                <input type="hidden" name="available" value="0">
+                <button class="h-12 w-full rounded-2xl text-[14px] font-extrabold {{ $worker->is_available ? 'bg-white text-[#5C4454]' : 'bg-[#5C4454] text-white' }}">غير متاح</button>
+            </form>
+        </div>
         <p class="mt-3 text-right text-[12px] leading-6 text-[#8A7280]">
-            {{ $worker->is_available ? 'الطلبات المتاحة لك ظاهرة أدناه مع السعر والمدة وموعد التسليم.' : 'لن يصلك أي طلب اليوم. رابط الدعوة يبقى فعّالاً.' }}
+            {{ $worker->is_available ? 'الطلبات المتاحة لك ظاهرة أدناه مع السعر والمدة وموعد التسليم.' : 'لن يصلك أي طلب اليوم، ويبقى رابط الدعوة فعّالًا.' }}
         </p>
     </section>
     </div>
@@ -80,14 +88,14 @@
                     @csrf
                     <div class="text-right">
                         <p class="text-[15px] font-extrabold">{{ $offer->title }}</p>
-                        <p class="num mt-1 text-[22px] font-extrabold text-[#3E5C45]">نصيبك {{ number_format($offer->workerShare()) }} ج</p>
-                        <p class="mt-1 text-[12px] text-[#8A7280]">سعر الخدمة {{ number_format($offer->service->price) }} جنيه · {{ $offer->meta }}</p>
+                        <p class="num mt-1 text-[22px] font-extrabold">{{ number_format($offer->service->price) }} جنيه</p>
+                        <p class="mt-1 text-[12px] text-[#8A7280]">{{ $offer->meta }} · نصيبك {{ number_format($offer->workerShare()) }} ج</p>
                     </div>
                     <div class="mt-3 flex flex-wrap justify-end gap-1.5 text-[11px] font-bold">
                         <span class="rounded-full bg-[#F6EDE4] px-2 py-1 text-[#6B4F60]">{{ $offer->due_label }}</span>
                         <span class="rounded-full bg-[#DCEFD6] px-2 py-1 text-[#3D5A34]">{{ $offer->duration }}</span>
                         @if ($offer->lockedFor($worker))
-                            <span class="rounded-full bg-[#EFE7F0] px-2 py-1 text-[#8A7280]">مقفولة · تفتح عند مستوى {{ $offer->min_level }}</span>
+                            <span class="rounded-full bg-[#EFE7F0] px-2 py-1 text-[#8A7280]">مغلقة · تُفتح عند المستوى الرابع</span>
                         @else
                             <span class="rounded-full bg-[#F6DE9E] px-2 py-1 text-[#5A4A22]">XP {{ $offer->xp }}+</span>
                         @endif
@@ -101,12 +109,12 @@
             @endforelse
             @endif
         </div>
-        <p class="mt-3 text-right text-[12px] leading-6 text-[#8A7280]">خط العمليات يبدأ بعد استلام المهمة، وتتابعينه من تبويب «المشاريع».</p>
+        <p class="mt-3 text-right text-[12px] leading-6 text-[#8A7280]">يبدأ خط العمليات بعد اعتماد بدء التنفيذ — من صاحب المهمة، أو من إداريات المنصة عند اختيار «حد ثقة يختار» — وتتابعينه من تبويب «المشاريع».</p>
     </section>
 
     <section class="mx-4 mb-6 mt-4 rounded-[24px] bg-[#5C4454] p-4 text-[#FDF6EE] sm:mx-6 md:p-6 lg:mx-8">
         <p class="text-[15px] font-extrabold">رابط دعوة بعمولة</p>
-        <p class="mt-1 text-[12px] leading-6 text-[#F7E7EF]">الكود {{ $worker->referral_code }} يخصم 10% لعميلك. عمولتك تتسجل على الطلب.</p>
+        <p class="mt-1 text-[12px] leading-6 text-[#F7E7EF]">نسبة من كل طلب يصل عن طريقك. الكود {{ $worker->referral_code }}.</p>
         <button type="button" onclick="navigator.clipboard.writeText('{{ route('client.request', ['code' => $worker->referral_code]) }}'); this.textContent='تم النسخ'" class="mt-3 h-11 rounded-2xl bg-white/15 px-4 text-[13px] font-extrabold">نسخ الرابط</button>
     </section>
 
