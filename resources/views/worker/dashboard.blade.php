@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-    <header class="flex items-start justify-between px-4 pt-5 sm:px-6 lg:px-8">
+    <header class="flex items-center justify-between px-4 pt-6 sm:px-6 lg:px-8">
         <button type="button" onclick="document.getElementById('help').showModal()" class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-[12px] font-extrabold shadow-sm">
             طلب مساعدة
         </button>
-        <div class="flex items-center gap-2">
-            <div class="text-right">
-                <p class="text-[16px] font-extrabold leading-none">لوحة المنفذة</p>
-                <p class="mt-1 text-[11px] text-[#8A7280]">متابعة المهام والأرباح</p>
-            </div>
-            <span class="grid h-12 w-12 place-items-center rounded-full bg-[#5C4454] text-[18px] font-extrabold text-white">{{ $worker->letter }}</span>
+        <div class="text-right">
+            <p class="text-[12px] text-[#8A7280]">أهلاً {{ $worker->name }}</p>
+            <h1 class="text-[28px] font-extrabold leading-none">مهامك وأرباحك</h1>
         </div>
     </header>
 
     <div class="mt-4 grid items-start gap-4 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-    <section class="rounded-[28px] bg-white p-4 shadow-sm md:p-6">
-        <h1 class="text-right text-[28px] font-extrabold md:text-4xl">أهلاً {{ $worker->name }}</h1>
-        <p class="mt-1 text-right text-[12.5px] leading-6 text-[#8A7280]">هذه حالة حسابك اليوم: الرصيد والمستوى والمبلغ الجاهز للسحب.</p>
+    <section class="sheet p-4 md:p-6">
+        <h2 class="text-right text-[18px] font-extrabold">حالة اليوم</h2>
+        <p class="mt-1 text-right text-[12.5px] leading-6 text-[#8A7280]">الجاهز للسحب هو نصيبك بعد تقييم العميل. المعلّق لسه عند المنصة.</p>
         <div class="mt-4 grid grid-cols-3 gap-2">
             <div class="rounded-2xl bg-[#DCEFD6] px-2 py-3 text-center">
                 <p class="text-[10px] text-[#4C6A44]">جاهز للسحب</p>
@@ -51,7 +48,7 @@
         </div>
     </section>
 
-    <section class="rounded-[28px] bg-white p-4 shadow-sm md:p-6">
+    <section class="sheet p-4 md:p-6">
         <div class="flex items-center justify-between">
             <span class="rounded-full px-2.5 py-1 text-[11px] font-extrabold {{ $worker->is_available ? 'bg-[#DCEFD6] text-[#2F4529]' : 'bg-[#F6EDE4] text-[#8A7280]' }}">
                 {{ $worker->is_available ? 'متاحة للعمل' : 'غير متاحة' }}
@@ -79,7 +76,7 @@
             @else
             @forelse ($offers as $offer)
                 @php $locked = $offer->lockedFor($worker); @endphp
-                <form method="POST" action="{{ $locked ? '#' : route('worker.claim', $offer) }}" class="rounded-[24px] bg-white p-4 shadow-sm {{ $locked ? 'opacity-70' : '' }}">
+                <form method="POST" action="{{ $locked ? '#' : route('worker.claim', $offer) }}" class="sheet p-4 {{ $locked ? 'opacity-70' : '' }}">
                     @csrf
                     <div class="text-right">
                         <p class="text-[15px] font-extrabold">{{ $offer->title }}</p>

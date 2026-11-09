@@ -18,6 +18,10 @@
         body { font-family: "Cairo", Tahoma, sans-serif; background: var(--cream); color: var(--ink); }
         .num { font-variant-numeric: tabular-nums; }
         .primary-action { scroll-margin-top: 6rem; }
+        .tile { background: #fff; border-radius: 1.25rem; padding: .9rem 1rem; box-shadow: 0 8px 24px rgba(44, 36, 40, .045); }
+        .sheet { background: #fff; border-radius: 1.5rem; box-shadow: 0 8px 24px rgba(44, 36, 40, .045); }
+        input, textarea, select { outline: none; }
+        input:focus, textarea:focus, select:focus { border-color: #5C3A4A; box-shadow: 0 0 0 3px rgba(92, 58, 74, .12); }
     </style>
 </head>
 <body>

@@ -20,7 +20,7 @@
             'حصة المنصة' => number_format($platform),
             'تحويلات إنستاباي' => number_format($payouts),
         ] as $label => $value)
-            <article class="rounded-2xl bg-white p-3 text-right">
+            <article class="tile text-right">
                 <p class="text-[11px] text-[#8A7280]">{{ $label }}</p>
                 <p class="num text-[22px] font-extrabold">{{ $value }}</p>
             </article>
@@ -34,10 +34,13 @@
                 @foreach ($gigs as $gig)
                     <article class="rounded-2xl bg-[#FBF6F1] p-3 text-right">
                         <p class="text-[14px] font-extrabold">{{ $gig['name'] }}</p>
-                        <p class="text-[12px] text-[#8A7280]">البائعة {{ $gig['seller'] }} · سعر العميل {{ number_format($gig['price']) }} ج · {{ $gig['orders'] }} طلب</p>
-                        <p class="mt-2 text-[12px]">محصّل {{ number_format($gig['collected']) }} ج</p>
-                        <p class="text-[12px] text-[#3E5C45]">المنفذة {{ number_format($gig['worker']) }} · ربح البائعة {{ number_format($gig['seller_gain']) }} · المنصة {{ number_format($gig['platform']) }}</p>
-                        <p class="text-[12px] text-[#8A7280]">ربح معلّق للبائعة {{ number_format($gig['pending']) }} ج</p>
+                        <p class="text-[12px] text-[#8A7280]">{{ $gig['seller'] }} · {{ $gig['orders'] }} طلب · سعر {{ number_format($gig['price']) }}</p>
+                        <dl class="mt-2 grid grid-cols-2 gap-1 text-[12px]">
+                            <div><dt class="text-[#8A7280]">المنفذة</dt><dd class="num font-extrabold">{{ number_format($gig['worker']) }}</dd></div>
+                            <div><dt class="text-[#8A7280]">ربح البائعة</dt><dd class="num font-extrabold text-[#3E5C45]">{{ number_format($gig['seller_gain']) }}</dd></div>
+                            <div><dt class="text-[#8A7280]">المنصة</dt><dd class="num font-extrabold">{{ number_format($gig['platform']) }}</dd></div>
+                            <div><dt class="text-[#8A7280]">معلّق</dt><dd class="num font-extrabold">{{ number_format($gig['pending']) }}</dd></div>
+                        </dl>
                     </article>
                 @endforeach
             </div>
@@ -50,8 +53,8 @@
                     <article class="rounded-2xl bg-[#F3F8F1] p-3 text-right">
                         <p class="text-[14px] font-extrabold">{{ $person['name'] }}</p>
                         <p class="text-[12px] text-[#8A7280]">{{ $person['level'] }} · {{ $person['jobs'] }} مكتملة · {{ $person['open'] }} شغالة</p>
-                        <p class="mt-2 text-[13px] font-extrabold text-[#3E5C45]">نصيبها الجاهز {{ number_format($person['available']) }} ج</p>
-                        <p class="text-[12px]">مكتسب {{ number_format($person['earned']) }} · معلّق {{ number_format($person['pending']) }}</p>
+                        <p class="num mt-2 text-[20px] font-extrabold text-[#3E5C45]">{{ number_format($person['available']) }} <span class="text-[12px]">جاهز</span></p>
+                        <p class="text-[12px] text-[#8A7280]">معلّق {{ number_format($person['pending']) }}</p>
                     </article>
                 @endforeach
             </div>
@@ -63,9 +66,9 @@
                 @foreach ($sellers as $person)
                     <article class="rounded-2xl bg-[#F8E9B6] p-3 text-right">
                         <p class="text-[14px] font-extrabold">{{ $person['name'] }}</p>
-                        <p class="text-[12px] text-[#8A7280]">{{ $person['gigs'] }} خدمة · {{ $person['orders'] }} طلب · بتكسب مش بتدفع</p>
-                        <p class="mt-2 text-[13px] font-extrabold">ربحها الجاهز {{ number_format($person['available']) }} ج</p>
-                        <p class="text-[12px]">من المكتمل {{ number_format($person['gain']) }} · معلّق {{ number_format($person['pending']) }}</p>
+                        <p class="text-[12px] text-[#8A7280]">{{ $person['gigs'] }} خدمة · {{ $person['orders'] }} طلب · بتكسب</p>
+                        <p class="num mt-2 text-[20px] font-extrabold">{{ number_format($person['available']) }} <span class="text-[12px]">جاهز</span></p>
+                        <p class="text-[12px] text-[#6B5560]">معلّق {{ number_format($person['pending']) }}</p>
                     </article>
                 @endforeach
             </div>

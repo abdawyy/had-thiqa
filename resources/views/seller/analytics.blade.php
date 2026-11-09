@@ -10,7 +10,7 @@
     </header>
     <section class="mx-4 mt-4 grid grid-cols-2 gap-2 sm:mx-6 sm:grid-cols-4 lg:mx-8">
         @foreach (['الطلبات' => $orders, 'مكتمل' => $done, 'شغال' => $open, 'الخدمات' => $gigs->count()] as $label => $value)
-            <article class="rounded-2xl bg-white p-3 text-right">
+            <article class="tile text-right">
                 <p class="text-[11px] text-[#8A7280]">{{ $label }}</p>
                 <p class="num text-[22px] font-extrabold">{{ $value }}</p>
             </article>
@@ -22,7 +22,7 @@
             <p class="num mt-2 text-4xl font-extrabold">{{ number_format($share) }} ج</p>
             <p class="mt-2">قيمة طلبات العملاء {{ number_format($sales) }} ج، والعميل هو الدافع</p>
         </article>
-        <article class="rounded-[24px] bg-white p-4">
+        <article class="sheet p-4">
             <h2 class="text-right text-[16px] font-extrabold">الخدمات حسب الطلب</h2>
             <div class="mt-3 space-y-2">
                 @foreach ($gigs->sortByDesc('orders_count') as $gig)

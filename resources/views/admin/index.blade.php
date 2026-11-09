@@ -4,34 +4,28 @@
 @endsection
 
 @section('content')
-    <header class="flex items-center justify-between px-4 pt-5 sm:px-6 lg:px-8">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="rounded-full bg-white px-4 py-2 text-[13px] font-extrabold text-[#7A3040]">خروج</button>
-        </form>
-        <div class="text-right">
-            <h1 class="text-[22px] font-extrabold">لوحة إداريات المنصة</h1>
-            <p class="text-[12px] text-[#8A7280]">المدفوعات والتقييمات وتوزيع المبالغ</p>
-        </div>
+    <header class="px-4 pt-6 text-right sm:px-6 lg:px-8">
+        <h1 class="text-[28px] font-extrabold">لوحة الإدارة</h1>
+        <p class="text-[13px] text-[#8A7280]">المحصّل، المنفذات، البائعات، والخدمات في مكان واحد.</p>
     </header>
 
     <section class="mx-4 mt-4 grid grid-cols-2 gap-2 sm:mx-6 sm:grid-cols-4 lg:mx-8">
-        <article class="rounded-2xl bg-[#5C4454] p-3 text-[#FDF6EE]">
+        <article class="tile bg-[#5C4454] text-[#FDF6EE]">
             <p class="text-[11px]">إجمالي المحصّل</p>
             <p class="num text-[20px] font-extrabold">{{ number_format($collected) }}</p>
             <p class="text-[11px] text-[#E8DCE2]">جنيه</p>
         </article>
-        <article class="rounded-2xl bg-[#F8E9B6] p-3">
+        <article class="tile bg-[#F8E9B6]">
             <p class="text-[11px]">نصيب المنصة</p>
             <p class="num text-[20px] font-extrabold">{{ number_format($platform) }}</p>
             <p class="text-[11px]">{{ \App\Support\Split::percent('platform') }}% من الأساس. المتابعة {{ number_format($trackingIncome) }} ج خارج النسبة</p>
         </article>
-        <article class="rounded-2xl bg-white p-3">
+        <article class="tile">
             <p class="text-[11px]">متوسط التقييم</p>
             <p class="num text-[20px] font-extrabold">{{ $average }}</p>
             <p class="text-[11px] text-[#8A7280]">{{ $ratings->count() }} تقييم</p>
         </article>
-        <article class="rounded-2xl bg-white p-3">
+        <article class="tile">
             <p class="text-[11px]">طلبات شغالة</p>
             <p class="num text-[20px] font-extrabold">{{ $active }}</p>
         </article>
@@ -40,22 +34,28 @@
     <section class="mx-4 mt-5 grid gap-4 sm:mx-6 lg:mx-8 lg:grid-cols-2">
         <div>
             <h2 class="text-right text-[18px] font-extrabold">المنفذات · عايزات يشتغلوا</h2>
-            <div class="mt-3 space-y-2">
+            <div class="mt-3 max-h-80 space-y-2 overflow-y-auto pe-1">
                 @foreach ($workers as $person)
-                    <article class="rounded-2xl bg-white px-4 py-3 text-right">
-                        <p class="text-[14px] font-extrabold">{{ $person->name }}</p>
-                        <p class="text-[12px] text-[#8A7280]">{{ $person->email }} · مستوى {{ $person->level }} {{ $person->level_name }} · {{ $person->is_available ? 'متاحة' : 'غير متاحة' }}</p>
+                    <article class="sheet flex items-center justify-between gap-3 px-4 py-3">
+                        <span class="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-extrabold {{ $person->is_available ? 'bg-[#DCEFD6] text-[#2F4529]' : 'bg-[#F6EDE4] text-[#8A7280]' }}">{{ $person->is_available ? 'متاحة' : 'غير متاحة' }}</span>
+                        <div class="text-right">
+                            <p class="text-[14px] font-extrabold">{{ $person->name }}</p>
+                            <p class="text-[12px] text-[#8A7280]">{{ $person->email }} · مستوى {{ $person->level }} {{ $person->level_name }}</p>
+                        </div>
                     </article>
                 @endforeach
             </div>
         </div>
         <div>
             <h2 class="text-right text-[18px] font-extrabold">بائعات الخدمات</h2>
-            <div class="mt-3 space-y-2">
+            <div class="mt-3 max-h-80 space-y-2 overflow-y-auto pe-1">
                 @forelse ($sellers as $person)
-                    <article class="rounded-2xl bg-white px-4 py-3 text-right">
-                        <p class="text-[14px] font-extrabold">{{ $person->name }}</p>
-                        <p class="text-[12px] text-[#8A7280]">{{ $person->email }} · {{ $person->gigs_count }} خدمة</p>
+                    <article class="sheet flex items-center justify-between gap-3 px-4 py-3">
+                        <span class="num shrink-0 rounded-full bg-[#F8E9B6] px-2.5 py-1 text-[11px] font-extrabold">{{ $person->gigs_count }} خدمة</span>
+                        <div class="text-right">
+                            <p class="text-[14px] font-extrabold">{{ $person->name }}</p>
+                            <p class="text-[12px] text-[#8A7280]">{{ $person->email }}</p>
+                        </div>
                     </article>
                 @empty
                     <p class="rounded-2xl bg-white p-4 text-[13px] text-[#8A7280]">ما فيش بائعات لسه.</p>
@@ -64,7 +64,7 @@
         </div>
     </section>
 
-    <nav class="mx-4 mt-4 flex flex-wrap justify-end gap-2 text-[12px] font-extrabold text-[#5C4454] sm:mx-6 lg:mx-8">
+    <nav class="sticky top-[68px] z-20 mx-4 mt-4 flex gap-2 overflow-x-auto bg-[#FBF6F1]/95 py-2 text-[12px] font-extrabold text-[#5C4454] backdrop-blur sm:mx-6 lg:mx-8">
         <a href="#services" class="rounded-full bg-white px-3 py-1">الخدمات</a>
         <a href="#payments" class="rounded-full bg-white px-3 py-1">المدفوعات</a>
         <a href="#ratings" class="rounded-full bg-white px-3 py-1">التقييمات</a>
