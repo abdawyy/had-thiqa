@@ -146,7 +146,7 @@
         <section class="mx-4 mt-4 sm:mx-6 lg:mx-8 rounded-[24px] bg-white p-4 text-right">
             <h2 class="text-[18px] font-extrabold">بانتظار تقييم العميل</h2>
             <p class="mt-2 text-[13px] leading-7 text-[#6B4F60]">سُلّم العمل. التقييم على جودة العمل والسعر والتعامل، وبعده يتحرر نصيبك.</p>
-            <a href="{{ route('client.orders.show', $order) }}" class="mt-4 flex h-12 items-center justify-center rounded-2xl bg-[#5C4454] font-extrabold text-white">افتحي صفحة العميل</a>
+            <p class="mt-3 rounded-2xl bg-[#F6F0E8] px-3 py-2 text-[12px] leading-6">التقييم يتفتح للعميل من صفحة طلبه. لوحة المنفذة لا تفتح صفحة الدفع.</p>
         </section>
     @endif
 

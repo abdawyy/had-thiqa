@@ -13,6 +13,7 @@
     </section>
     <section class="space-y-2">
         @foreach ($order->shares() as $share)
+            @continue($share['id'] === 'author')
             <div class="flex items-center justify-between rounded-2xl bg-white px-4 py-3">
                 <span class="num text-[16px] font-extrabold">{{ number_format($share['amount']) }} ج · {{ $share['pct'] }}%</span>
                 <span class="text-[14px] font-extrabold">{{ $share['label'] }}</span>
@@ -24,7 +25,7 @@
                 <span class="text-[14px] font-extrabold">متابعة تفصيلية: مبلغ للمنصة</span>
             </div>
         @endif
-        <p class="text-right text-[12px] leading-6 text-[#8A7280]">متابعة تفصيلية: مبلغ للمنصة، خارج توزيع الأربعة.</p>
+        <p class="text-right text-[12px] leading-6 text-[#8A7280]">متابعة تفصيلية: مبلغ للمنصة، خارج التوزيع.</p>
     </section>
     </div>
     <section class="mx-4 mt-4 rounded-[24px] bg-[#F8E2CA] p-4 text-right sm:mx-6 md:p-6 lg:mx-8">

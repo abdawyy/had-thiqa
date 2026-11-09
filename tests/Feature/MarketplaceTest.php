@@ -21,11 +21,9 @@ class MarketplaceTest extends TestCase
         $this->seed();
         $this->actingAs($this->sara());
 
-        $this->get('/')->assertOk()->assertSee('اختر مسارك', false);
+        $this->get('/')->assertOk()->assertSee('اختر مسارك', false)->assertDontSee('بائعة', false);
         $this->get('/worker')->assertOk()->assertSee('أهلاً سارة', false)->assertSee('405', false);
         $this->get(route('worker.analytics'))->assertOk()->assertSee('405', false);
-        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
-        $this->get(route('seller.analytics'))->assertOk()->assertSee('135', false)->assertSee('ربحك', false);
     }
 
     public function test_worker_can_claim_a_task_and_finish_the_first_step(): void
@@ -137,64 +135,35 @@ class MarketplaceTest extends TestCase
         $this->assertNotNull($skill->fresh()->reviewed_at);
     }
 
-    public function test_seller_can_publish_a_gig_and_admin_sees_both_sides(): void
+    public function test_seller_pages_stay_hidden_and_admin_sees_workers(): void
     {
         $this->seed();
 
-        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
-        $this->post(route('seller.gigs.store'), [
-            'name' => 'تغليف هدية',
-            'sample' => 'علبة صغيرة بشريطة',
-            'price' => 150,
-            'duration' => '20 دقيقة',
-            'min_level' => 1,
-        ])->assertRedirect();
-
-        $this->assertDatabaseHas('services', [
-            'name' => 'تغليف هدية',
-            'seller_id' => User::query()->where('email', 'seller@hadthiqa.test')->value('id'),
-        ]);
-
-        $gig = Service::query()->where('name', 'تغليف هدية')->firstOrFail();
-        $this->put(route('seller.gigs.edit', $gig), [
-            'name' => 'تغليف فاخر',
-            'sample' => 'علبة بشريطة دهب',
-            'price' => 220,
-            'duration' => '25 دقيقة',
-            'min_level' => 2,
-        ])->assertRedirect(route('seller.gigs.show', $gig));
-        $this->assertSame(220, $gig->fresh()->price);
+        $this->get(route('login', ['as' => 'seller']))->assertRedirect(route('home'));
+        $this->get(route('register', ['as' => 'seller']))->assertNotFound();
+        $this->get(route('seller.home'))->assertRedirect(route('home'));
 
         $this->actingAs(User::query()->where('email', 'admin@hadthiqa.test')->firstOrFail());
         $this->get(route('admin.home'))
             ->assertOk()
             ->assertSee('سارة', false)
-            ->assertSee('ندى', false)
-            ->assertSee('تغليف فاخر', false);
-
-        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
-        $this->delete(route('seller.gigs.destroy', $gig))->assertRedirect(route('seller.home'));
-        $this->assertDatabaseMissing('services', ['id' => $gig->id]);
+            ->assertDontSee('بائع', false);
+        $this->get(route('admin.analytics'))
+            ->assertOk()
+            ->assertDontSee('بائع', false);
     }
 
-    public function test_seller_cannot_open_someone_elses_gig_or_order(): void
+    public function test_a_seller_account_cannot_open_the_client_or_seller_panels(): void
     {
         $this->seed();
-        $other = User::query()->create([
-            'name' => 'بائعة تانية',
-            'email' => 'other-seller@hadthiqa.test',
-            'password' => 'password',
-            'role' => 'seller',
-        ]);
-        $this->actingAs($other);
+        $this->actingAs(User::query()->where('email', 'seller@hadthiqa.test')->firstOrFail());
 
-        $paint = Service::query()->where('slug', 'paint')->firstOrFail();
         $foreign = Order::query()->where('number', 1038)->firstOrFail();
 
-        $this->get(route('seller.gigs.show', $paint))->assertForbidden();
-        $this->get(route('seller.orders.show', $foreign))->assertForbidden();
-        $this->get(route('client.orders.show', $foreign))->assertRedirect(route('seller.home'));
-        $this->get(route('client.request'))->assertRedirect(route('seller.home'));
+        $this->get(route('seller.gigs.show', Service::query()->where('slug', 'paint')->firstOrFail()))->assertRedirect(route('home'));
+        $this->get(route('seller.orders.show', $foreign))->assertRedirect(route('home'));
+        $this->get(route('client.orders.show', $foreign))->assertRedirect(route('home'));
+        $this->get(route('client.request'))->assertRedirect(route('home'));
     }
 
     public function test_late_delivery_does_not_grant_the_speed_bonus(): void

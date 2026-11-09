@@ -33,6 +33,10 @@ class ClientOrderController extends Controller
 
     public function store(Request $request)
     {
+        if ($redirect = $this->sendStaffHome()) {
+            return $redirect;
+        }
+
         $data = $request->validate([
             'service_id' => 'required|exists:services,id',
             'client_name' => 'nullable|string|max:80',
@@ -143,7 +147,7 @@ class ClientOrderController extends Controller
     private function sendStaffHome()
     {
         return match (auth()->user()?->role) {
-            'seller' => redirect()->route('seller.home'),
+            'seller' => redirect()->route('home'),
             'worker' => redirect()->route('worker.home'),
             'admin' => redirect()->route('admin.home'),
             default => null,

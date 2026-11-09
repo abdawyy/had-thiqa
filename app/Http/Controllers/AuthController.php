@@ -12,6 +12,10 @@ class AuthController extends Controller
 {
     public function showLogin(Request $request)
     {
+        if ($request->query('as') === 'seller') {
+            return redirect()->route('home');
+        }
+
         return view('auth.login', [
             'as' => $this->audience($request->query('as')),
         ]);
@@ -19,10 +23,14 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        if ($request->input('as') === 'seller') {
+            return redirect()->route('home');
+        }
+
         $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
-            'as' => 'required|in:worker,seller,admin',
+            'as' => 'required|in:worker,admin',
         ], [
             'email.required' => 'اكتبي البريد الإلكتروني.',
             'password.required' => 'اكتبي كلمة المرور.',
@@ -51,8 +59,9 @@ class AuthController extends Controller
 
     public function showRegister(Request $request)
     {
+        abort_if(in_array($request->query('as'), ['admin', 'seller'], true), 404);
+
         $as = $this->audience($request->query('as'));
-        abort_if($as === 'admin', 404);
 
         return view('auth.register', ['as' => $as]);
     }
@@ -63,7 +72,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:80',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'as' => 'required|in:worker,seller',
+            'as' => 'required|in:worker',
         ], [
             'name.required' => 'اكتبي الاسم.',
             'email.unique' => 'هذا البريد مستخدم بالفعل.',
@@ -80,6 +89,7 @@ class AuthController extends Controller
             'tier' => 'beginner',
             'level' => 1,
             'level_name' => $data['as'] === 'seller' ? 'بائعة' : 'ابتداء',
+            'points' => 0,
             'is_available' => true,
             'referral_code' => strtoupper(Str::random(6)),
         ]);
@@ -101,13 +111,12 @@ class AuthController extends Controller
 
     private function audience(mixed $value): string
     {
-        return in_array($value, ['worker', 'seller', 'admin'], true) ? $value : 'worker';
+        return in_array($value, ['worker', 'admin'], true) ? $value : 'worker';
     }
 
     private function homeName(string $role): string
     {
         return match ($role) {
-            'seller' => 'seller.home',
             'admin' => 'admin.home',
             default => 'worker.home',
         };

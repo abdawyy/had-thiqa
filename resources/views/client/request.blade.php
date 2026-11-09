@@ -35,7 +35,7 @@
                 <input name="client_name" value="{{ old('client_name') }}" placeholder="مثال: م. منى" class="mt-1 h-12 w-full rounded-2xl border border-black/10 bg-white px-3">
             </label>
             <label class="mt-3 block text-right text-[12px] font-bold">وصف قصير
-                <textarea name="description" required rows="4" placeholder="اكتب تفاصيل طلبك هنا" class="mt-1 w-full rounded-2xl border border-black/10 bg-white p-3">{{ old('description') }}</textarea>
+                <textarea name="description" rows="4" placeholder="اكتب تفاصيل طلبك هنا" class="mt-1 w-full rounded-2xl border border-black/10 bg-white p-3">{{ old('description') }}</textarea>
             </label>
             <label class="mt-3 block rounded-2xl bg-white p-3 text-right text-[12px] font-bold">ارفع صور · حتى 3
                 <input type="file" name="photos[]" accept="image/*" multiple class="mt-2 block w-full text-[12px]">
@@ -162,7 +162,13 @@
         function filterWorkers() {
             const tier = selected('detail_level')?.value;
             document.querySelectorAll('.worker-card').forEach((card) => {
-                card.hidden = card.dataset.tier !== tier;
+                const hide = card.dataset.tier !== tier;
+                card.hidden = hide;
+                const input = card.querySelector('input');
+                if (hide && input?.checked) {
+                    input.checked = false;
+                    document.querySelector('input[name="worker_id"][value=""]').checked = true;
+                }
             });
         }
         document.querySelectorAll('[data-next]').forEach((btn) => btn.addEventListener('click', () => {

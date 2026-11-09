@@ -6,7 +6,7 @@
 @section('content')
     <header class="px-4 pt-6 text-right sm:px-6 lg:px-8">
         <h1 class="text-[28px] font-extrabold">لوحة الإدارة</h1>
-        <p class="text-[13px] text-[#8A7280]">المحصّل، المنفذات، البائعات، والخدمات في مكان واحد.</p>
+        <p class="text-[13px] text-[#8A7280]">المحصّل، المنفذات، والخدمات في مكان واحد.</p>
     </header>
 
     <section class="mx-4 mt-4 grid grid-cols-2 gap-2 sm:mx-6 sm:grid-cols-4 lg:mx-8">
@@ -31,7 +31,7 @@
         </article>
     </section>
 
-    <section class="mx-4 mt-5 grid gap-4 sm:mx-6 lg:mx-8 lg:grid-cols-2">
+    <section class="mx-4 mt-5 sm:mx-6 lg:mx-8">
         <div>
             <h2 class="text-right text-[18px] font-extrabold">المنفذات · عايزات يشتغلوا</h2>
             <div class="mt-3 max-h-80 space-y-2 overflow-y-auto pe-1">
@@ -44,22 +44,6 @@
                         </div>
                     </article>
                 @endforeach
-            </div>
-        </div>
-        <div>
-            <h2 class="text-right text-[18px] font-extrabold">بائعات الخدمات</h2>
-            <div class="mt-3 max-h-80 space-y-2 overflow-y-auto pe-1">
-                @forelse ($sellers as $person)
-                    <article class="sheet flex items-center justify-between gap-3 px-4 py-3">
-                        <span class="num shrink-0 rounded-full bg-[#F8E9B6] px-2.5 py-1 text-[11px] font-extrabold">{{ $person->gigs_count }} خدمة</span>
-                        <div class="text-right">
-                            <p class="text-[14px] font-extrabold">{{ $person->name }}</p>
-                            <p class="text-[12px] text-[#8A7280]">{{ $person->email }}</p>
-                        </div>
-                    </article>
-                @empty
-                    <p class="rounded-2xl bg-white p-4 text-[13px] text-[#8A7280]">ما فيش بائعات لسه.</p>
-                @endforelse
             </div>
         </div>
     </section>
@@ -82,7 +66,7 @@
                         <span class="num text-[13px] font-extrabold">{{ number_format($service->price) }} ج</span>
                         <div class="text-right">
                             <p class="text-[14px] font-extrabold">{{ $service->name }}</p>
-                            <p class="text-[11px] text-[#8A7280]">{{ $service->available ? 'ظاهرة للعملاء' : 'مخفية عن العملاء' }} · {{ $service->seller?->name ?? 'المنصة' }}</p>
+                            <p class="text-[11px] text-[#8A7280]">{{ $service->available ? 'ظاهرة للعملاء' : 'مخفية عن العملاء' }}</p>
                         </div>
                     </div>
                     <div class="mt-2 flex gap-2">
@@ -127,6 +111,7 @@
                     </summary>
                     <div class="mt-2 space-y-1 text-[12px]">
                         @foreach ($order->shares() as $share)
+                            @continue($share['id'] === 'author')
                             <div class="flex justify-between"><span class="num">{{ number_format($share['amount']) }} ج</span><span>{{ $share['label'] }}</span></div>
                         @endforeach
                         @if ($order->tracking_fee > 0)

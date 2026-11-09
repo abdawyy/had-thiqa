@@ -26,9 +26,7 @@
 </head>
 <body>
     <div class="min-h-screen">
-        @if (auth()->user()?->role === 'seller')
-            @include('partials.seller-nav')
-        @elseif (auth()->user()?->role === 'admin')
+        @if (auth()->user()?->role === 'admin')
             @include('partials.admin-nav')
         @elseif (auth()->user()?->role === 'worker' && ! View::hasSection('plain'))
             @include('partials.nav')

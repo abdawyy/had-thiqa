@@ -120,13 +120,14 @@
     @else
         <section class="mx-4 mt-4 sm:mx-6 lg:mx-8 lg:max-w-none rounded-[24px] bg-[#DCEFD6] p-4 text-right">
             <h2 class="text-[18px] font-extrabold">تم إرسال التقييم</h2>
-            <p class="mt-2 text-[13px] leading-7">{{ $order->rating?->average() }} من 5 · يُحرَّر المبلغ المحجوز للمنفذة والبارتنر ومؤلفة الـ SOP.</p>
+            <p class="mt-2 text-[13px] leading-7">{{ $order->rating?->average() }} من 5 · اتحرر المبلغ للمنفذة والبارتنر والمنصة.</p>
             @if ($order->rating?->note)
                 <p class="mt-2 text-[12px]">{{ $order->rating->note }}</p>
             @endif
         </section>
         <section class="mx-4 mt-3 sm:mx-6 lg:mx-8 space-y-2">
             @foreach ($order->shares() as $share)
+                @continue($share['id'] === 'author')
                 <div class="flex items-center justify-between rounded-2xl bg-white px-4 py-3 text-[13px] font-extrabold">
                     <span class="num">{{ number_format($share['amount']) }} ج</span>
                     <span>{{ $share['label'] }} · {{ $share['pct'] }}%</span>
@@ -142,8 +143,5 @@
         </form>
     @endif
 
-    @if ($order->worker?->email === 'sara@hadthiqa.test')
-        <a href="{{ route('worker.orders.show', $order) }}" class="mx-4 mt-3 flex h-11 items-center justify-center text-[13px] font-extrabold text-[#5C4454] sm:mx-6 lg:mx-8">لوحة تنفيذ {{ $order->worker->name }}</a>
-    @endif
     </div>
 @endsection

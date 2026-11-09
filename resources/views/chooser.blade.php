@@ -21,13 +21,12 @@
         <h1 class="mt-6 text-right text-[32px] font-extrabold leading-none md:text-5xl">اختر مسارك</h1>
         <p class="mt-3 text-right text-[14px] leading-7 text-[#8A7280]">مساران واضحان، لكل مسار خط عمليات، وتقييم في النهاية على الجودة والسعر والتعامل.</p>
 
-        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
             <a href="{{ route('login', ['as' => 'worker']) }}" class="rounded-2xl bg-white px-4 py-3 text-center text-[13px] font-extrabold text-[#3E5C45]">دخول المنفذة</a>
-            <a href="{{ route('login', ['as' => 'seller']) }}" class="rounded-2xl bg-white px-4 py-3 text-center text-[13px] font-extrabold text-[#5C3A4A]">دخول بائعة الخدمة</a>
             <a href="{{ route('login', ['as' => 'admin']) }}" class="rounded-2xl bg-[#5C3A4A] px-4 py-3 text-center text-[13px] font-extrabold text-white">دخول الإدارة</a>
         </div>
 
-        <div class="mt-5 grid gap-4 lg:grid-cols-2">
+        <div class="mt-5">
         <a href="{{ route('login', ['as' => 'worker']) }}" class="block rounded-[28px] border border-[#D7E8D2] bg-[#F3F8F1] p-4 md:p-6">
             <div class="flex items-start justify-between">
                 <span class="grid h-12 w-12 place-items-center rounded-2xl bg-white text-[#3D5A34]">
@@ -44,18 +43,6 @@
             </div>
             <span class="mt-4 flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#3E5C45] text-[16px] font-extrabold text-[#F4FBF2]">ادخلي لوحة العمل ←</span>
         </a>
-
-        <a href="{{ route('login', ['as' => 'seller']) }}" class="block overflow-hidden rounded-[28px] bg-[#5C3A4A] p-4 text-[#FBF6F1] md:p-6">
-            <div class="flex items-start justify-between">
-                <span class="grid h-12 w-12 place-items-center rounded-2xl bg-white/10">
-                    <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4h8v16H8z"/><path d="M10 8h4M10 12h4M10 16h2"/></svg>
-                </span>
-                <p class="text-[13px] font-bold text-[#F0D7E4]">أبيع خدمة</p>
-            </div>
-            <h2 class="mt-3 text-right text-[26px] font-extrabold leading-snug">أبيع خدمة على المنصة</h2>
-            <p class="mt-2 text-right text-[13px] leading-7 text-[#F3E4EC]">انشري الخدمة والسعر، وتابعي الطلبات اللي وصلت لها، من غير ما تختلطي بلوحة المنفذة.</p>
-            <span class="mt-4 flex h-14 items-center justify-center rounded-2xl bg-[#E2B15A] text-[16px] font-extrabold text-[#3E2A22]">ادخلي لوحة البيع ←</span>
-        </a>
         </div>
 
         @if ($resume)
@@ -68,7 +55,7 @@
             <span class="text-[18px] text-[#C7B7C0]">←</span>
             <span class="text-right">
                 <span class="block text-[15px] font-extrabold">إداريات المنصة</span>
-                <span class="mt-1 block text-[12px] text-[#8A7280]">تشوفي المنفذات والبائعات والطلبات</span>
+                <span class="mt-1 block text-[12px] text-[#8A7280]">تشوفي المنفذات والخدمات والطلبات</span>
             </span>
         </a>
         <p class="mt-4 text-center text-[12px] text-[#A9939F]">كل البيانات هنا تجريبية — لا توجد مدفوعات حقيقية.</p>

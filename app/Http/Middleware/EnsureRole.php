@@ -18,8 +18,8 @@ class EnsureRole
 
         if (! in_array($user->role, $roles, true)) {
             return redirect()->route(match ($user->role) {
-                'seller' => 'seller.home',
                 'admin' => 'admin.home',
+                'seller' => 'home',
                 default => 'worker.home',
             });
         }

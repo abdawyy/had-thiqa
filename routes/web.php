@@ -51,6 +51,8 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::post('/orders/{order}/rate', [ClientOrderController::class, 'rate'])->name('orders.rate');
 });
 
+Route::any('/seller/{any?}', fn () => redirect()->route('home'))->where('any', '.*')->name('seller.hidden');
+
 Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller'])->group(function () {
     Route::get('/', [SellerController::class, 'home'])->name('home');
     Route::get('/analytics', [SellerController::class, 'analytics'])->name('analytics');

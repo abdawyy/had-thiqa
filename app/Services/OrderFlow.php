@@ -69,6 +69,7 @@ class OrderFlow
 
             $offer->update(['active' => false]);
             SopLibrary::attach($order);
+            Wallet::collect($order);
 
             return $order;
         });
