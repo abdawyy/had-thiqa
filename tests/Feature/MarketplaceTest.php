@@ -151,6 +151,18 @@ class MarketplaceTest extends TestCase
         $this->get(route('admin.analytics'))
             ->assertOk()
             ->assertDontSee('بائع', false);
+
+        $this->post(route('admin.services.store'), [
+            'name' => 'تنسيق مكتب',
+            'sample' => 'مكتب صغير هادي',
+            'price' => 180,
+            'xp' => 90,
+            'duration' => '25 دقيقة',
+            'min_level' => 1,
+        ])->assertRedirect();
+
+        $this->actingAs($this->sara());
+        $this->get(route('worker.home'))->assertOk()->assertSee('تنسيق مكتب', false);
     }
 
     public function test_a_seller_account_cannot_open_the_client_or_seller_panels(): void

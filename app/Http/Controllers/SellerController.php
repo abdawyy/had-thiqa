@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Service;
+use App\Support\GigBoard;
 use App\Support\Split;
 use App\Support\Wallet;
 use Illuminate\Http\Request;
@@ -72,12 +73,13 @@ class SellerController extends Controller
     {
         $data = $this->validated($request);
 
-        Service::create($data + [
+        $service = Service::create($data + [
             'seller_id' => auth()->id(),
             'slug' => 'gig-'.Str::lower(Str::random(6)),
             'xp' => 100,
             'available' => true,
         ]);
+        GigBoard::open($service);
 
         return back()->with('status', 'اتنشرت الخدمة وبق تظهر للعملاء.');
     }

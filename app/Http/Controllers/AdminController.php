@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Skill;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Support\GigBoard;
 use App\Support\Split;
 use App\Support\Wallet;
 use Illuminate\Http\RedirectResponse;
@@ -56,19 +57,21 @@ class AdminController extends Controller
             'min_level' => 'required|integer|min:1|max:5',
         ]);
 
-        Service::create($data + [
+        $service = Service::create($data + [
             'slug' => 'svc-'.Str::lower(Str::random(6)),
             'available' => true,
         ]);
+        GigBoard::open($service);
 
-        return back()->with('status', 'اتضافت الخدمة وظهرت للعملاء.');
+        return back()->with('status', 'اتضافت الخدمة وظهرت لسارة في المهام.');
     }
 
     public function update(Request $request, Service $service)
     {
         $service->update(['available' => $request->boolean('available')]);
+        GigBoard::open($service->fresh(), true);
 
-        return back()->with('status', $service->available ? 'الخدمة ظاهرة للعملاء.' : 'الخدمة اختفت من العملاء.');
+        return back()->with('status', $service->available ? 'الخدمة ظاهرة للمنفذات.' : 'الخدمة اختفت من المنفذات.');
     }
 
     public function destroy(Service $service)

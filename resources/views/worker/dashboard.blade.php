@@ -95,7 +95,7 @@
                         <span class="rounded-full bg-[#F6EDE4] px-2 py-1 text-[#6B4F60]">{{ $offer->due_label }}</span>
                         <span class="rounded-full bg-[#DCEFD6] px-2 py-1 text-[#3D5A34]">{{ $offer->duration }}</span>
                         @if ($offer->lockedFor($worker))
-                            <span class="rounded-full bg-[#EFE7F0] px-2 py-1 text-[#8A7280]">مغلقة · تُفتح عند المستوى الرابع</span>
+                            <span class="rounded-full bg-[#EFE7F0] px-2 py-1 text-[#8A7280]">مغلقة · تُفتح عند مستوى {{ $offer->min_level }}</span>
                         @else
                             <span class="rounded-full bg-[#F6DE9E] px-2 py-1 text-[#5A4A22]">XP {{ $offer->xp }}+</span>
                         @endif

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Support\Demo;
+use App\Support\GigBoard;
 use App\Support\Wallet;
 use Illuminate\Http\Request;
 
@@ -13,11 +14,12 @@ class WorkerController extends Controller
     public function home()
     {
         $worker = Demo::worker();
+        GigBoard::sync();
 
         return view('worker.dashboard', [
             'worker' => $worker,
             'progress' => $worker->progress(),
-            'offers' => Offer::query()->with('service')->where('active', true)->orderBy('id')->get(),
+            'offers' => Offer::query()->with('service')->where('active', true)->whereHas('service', fn ($query) => $query->where('available', true))->orderByDesc('id')->get(),
             'money' => [
                 'available' => Wallet::available($worker),
                 'pending' => Wallet::pending($worker),
